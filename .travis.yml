@@ -1,0 +1,20 @@
+sudo: required
+language: python
+services:
+- docker
+before_install:
+- source ./version_env.sh
+- echo tor-proxy version is $TOR_PROXY_VERSION
+script:
+- if [[ -n $TRAVIS_TAG ]] && [[ $TRAVIS_OS_NAME == 'linux' ]]; then
+      docker run --rm -v $(pwd):/build -w /build ubuntu:18.04 /build/build.sh;
+  fi
+deploy:
+  provider: releases
+  api_key:
+    secure: eQZHiBFgfcOEsdD/olv2rlJshAd3i9FDSb9BMEND2aJuni6/kFXuR5lRA1hxcQwgkr98Db/VIVLE7FZwJ36fkggeCBJUk8+So0fwy+E1m5IbnitQ/Hl/ZNy2dCAOHNWUnVOkBn45kA6/KuKS7Ag643vxwhnne/8zqn2dYI/duTJ0Dp4XrMQlrXMJzqxig53WUlTGgTsUe9zZY9mbabAAr6CZ+4z546UV9m/BHB3Mz38HMBftwK7K8Br+ZRwL7z0eLwUbFszBOAStTtHjrG8fHiH5hN0bg3BseQWxpIVisCFXo5XjtXm0CcOOZUxhtD8f9O2watrl2Nn7NVBr5D0kxJIQLPxkolR/Pu/C7AqtVcpscVaHtwSkxVjt3PhcUA+crMVRIrqjl4VFcGOl/4q3vtnbDvckwHDNhfJYXr3JxvxrZBg/F/B/8L6J9mKcOqsvhLufOINJ9MWhF/zRwxLG2QEE7yqOWKf0mKP0nQ+as+2dtk7nuCIpx9COWhvwx+IP2wuomdDX6nJyvo/QMPyI6Hox9HcUTf3WOtQgPXcCPWmmHx9+soj7v0F7WzFEW0OkmzeNCh44cQspNAFylGGVTKHQdaa4NYje4F1GVCJu+HA220okY6MhfBMsOvrWXqm1HjBa1Q13jyDuMjHqymcug9OLllR4uk9YIIOxcBbOX1A=
+  file:
+  - dist/tor-proxy-$TOR_PROXY_VERSION-setup.exe
+  on:
+    repo: zebra-lucky/tor-proxy
+    tags: true

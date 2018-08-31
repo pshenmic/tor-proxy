@@ -64,6 +64,10 @@ FunctionEnd
 Section
   SetOutPath $INSTDIR
 
+  ;Uninstall previously installed service
+  IfFileExists "$INSTDIR\Tor\tor.exe" 0 +2
+  ExecWait "$INSTDIR\Tor\tor.exe --service remove"
+
   ;Uninstall previous version files
   RMDir /r "$INSTDIR\*.*"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"

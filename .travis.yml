@@ -7,7 +7,7 @@ before_install:
 - echo tor-proxy version is $TOR_PROXY_VERSION
 script:
 - if [[ -n $TRAVIS_TAG ]] && [[ $TRAVIS_OS_NAME == 'linux' ]]; then
-      docker run --rm -v $(pwd):/build -w /build ubuntu:18.04 /build/build.sh;
+      docker run --rm -e "TOR_PROXY_VERSION=$TOR_PROXY_VERSION" -v $(pwd):/build -w /build ubuntu:18.04 /build/build.sh;
   fi
 deploy:
   provider: releases

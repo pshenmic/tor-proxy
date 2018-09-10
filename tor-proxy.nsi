@@ -4,7 +4,7 @@
 
 
 !define PRODUCT_NAME "Tor Proxy"
-!define PRODUCT_VERSION "0.3.3.7"
+!define PRODUCT_VERSION "${TOR_PROXY_VERSION}"
 !define PRODUCT_WEB_SITE "https://github.com/akhavr/tor-proxy"
 !define PRODUCT_PUBLISHER "The Tor Project"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"

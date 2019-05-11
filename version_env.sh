@@ -1,1 +1,1 @@
-export TOR_PROXY_VERSION=0.3.3.9
+export TOR_PROXY_VERSION=0.3.5.8

@@ -2,7 +2,7 @@
 
 set -ev
 
-apt-get update && apt-get install -y nsis wget unzip
+apt-get update && apt-get install -y nsis wget unzip perl
 
 TOR_URI=https://dist.torproject.org/torbrowser/9.0.6
 

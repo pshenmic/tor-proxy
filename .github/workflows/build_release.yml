@@ -1,0 +1,74 @@
+name: Build release workflow
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+
+  create_release:
+    runs-on: ubuntu-18.04
+    name: Create github release
+    outputs:
+      upload_url: >
+        ${{ steps.get_release.outputs.upload_url ||
+            steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Try to Get Release
+        id: get_release
+        uses: zebra-lucky/actions-js-getRelease@0.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: ${{ github.ref }}
+      - name: Create Release
+        id: create_release
+        if: ${{ !steps.get_release.outputs.upload_url }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  build_win:
+    needs: create_release
+    runs-on: ubuntu-18.04
+    name: create release for Win
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set outputs for pkg_ver
+        id: set_vars
+        run: |
+          source ./version_env.sh
+          echo "::set-output name=pkg_ver::$(echo $TOR_PROXY_VERSION)"
+      - name: Prepare build
+        run: |
+          docker pull ubuntu:18.04
+      - name: Build Win
+        env:
+          TOR_PROXY_VERSION: ${{ steps.set_vars.outputs.pkg_ver }}
+        run: |
+          docker run --rm -e "TOR_PROXY_VERSION=$TOR_PROXY_VERSION" -v $(pwd):/build -w /build ubuntu:18.04 /build/build.sh;
+      - name: Upload Win32 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: dist/tor-proxy-${{ steps.set_vars.outputs.pkg_ver }}-win32-setup.exe
+          asset_name: tor-proxy-${{ steps.set_vars.outputs.pkg_ver }}-win32-setup.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
+      - name: Upload Win64 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: dist/tor-proxy-${{ steps.set_vars.outputs.pkg_ver }}-win64-setup.exe
+          asset_name: tor-proxy-${{ steps.set_vars.outputs.pkg_ver }}-win64-setup.exe
+          asset_content_type: application/vnd.microsoft.portable-executable

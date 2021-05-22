@@ -4,13 +4,13 @@ set -ev
 
 apt-get update && apt-get install -y nsis wget unzip perl
 
-TOR_URI=https://dist.torproject.org/torbrowser/9.0.6
+TOR_URI=https://dist.torproject.org/torbrowser/10.0.15
 
 FILE_32=tor-win32-${TOR_PROXY_VERSION}.zip
-SHA256_32=b3ccfdbf11f0eb63d26c95a7178c0583e4fde54cd9f46159edbc868856b9e6ae
+SHA256_32=0f3a038dc1a422c4824c57933889ea7624e4cdd05b3715fc8b310d90110dd567
 
 FILE_64=tor-win64-${TOR_PROXY_VERSION}.zip
-SHA256_64=75a350e686a700e89f2247629a561378ab4cf7633fe524486f94635791af6b60
+SHA256_64=e437c6303054d238324507321ed8a4a9a2e67da523f537c5cab9aa1a84344a66
 
 wget ${TOR_URI}/${FILE_32}
 echo "$SHA256_32  $FILE_32" > $FILE_32.sha256

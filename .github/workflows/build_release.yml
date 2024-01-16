@@ -8,7 +8,7 @@ on:
 jobs:
 
   create_release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     name: Create github release
     outputs:
       upload_url: >
@@ -36,7 +36,7 @@ jobs:
 
   build_win:
     needs: create_release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     name: create release for Win
     steps:
       - name: Checkout
@@ -48,12 +48,12 @@ jobs:
           echo "::set-output name=pkg_ver::$(echo $TOR_PROXY_VERSION)"
       - name: Prepare build
         run: |
-          docker pull ubuntu:18.04
+          docker pull ubuntu:22.04
       - name: Build Win
         env:
           TOR_PROXY_VERSION: ${{ steps.set_vars.outputs.pkg_ver }}
         run: |
-          docker run --rm -e "TOR_PROXY_VERSION=$TOR_PROXY_VERSION" -v $(pwd):/build -w /build ubuntu:18.04 /build/build.sh;
+          docker run --rm -e "TOR_PROXY_VERSION=$TOR_PROXY_VERSION" -v $(pwd):/build -w /build ubuntu:22.04 /build/build.sh;
       - name: Upload Win32 Release Asset
         uses: actions/upload-release-asset@v1
         env:
